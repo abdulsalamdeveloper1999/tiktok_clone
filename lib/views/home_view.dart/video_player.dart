@@ -20,7 +20,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
     _videoPlayerController =
         CachedVideoPlayerController.network(widget.videoUrl)
           ..initialize().then((value) {
-            _videoPlayerController.pause();
+            _videoPlayerController.play();
             // _videoPlayerController.play();
             _videoPlayerController.setLooping(true);
             _videoPlayerController.setVolume(1);
