@@ -8,15 +8,13 @@ class ProfileController extends GetxController {
   Map<String, dynamic> get user => _user.value;
 
   final Rx<String> _uid = ''.obs;
-
+  List<String> thumbnail = [];
   updateProfile(String uid) {
     _uid.value = uid;
     getUserData();
   }
 
   getUserData() async {
-    List<String> thumbnail = [];
-
     var myVideos = await firebaseFirestore
         .collection('videos')
         .where("uid", isEqualTo: _uid.value)

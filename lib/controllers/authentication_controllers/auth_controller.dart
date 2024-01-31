@@ -21,6 +21,30 @@ class AuthController extends GetxController {
   TextEditingController usernameController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
+  // late Rx<User?> _user;
+
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+
+  GlobalKey<FormState> get formKey => _key;
+
+  final GlobalKey<FormState> _signUpkey = GlobalKey<FormState>();
+
+  GlobalKey<FormState> get signUpKey => _signUpkey;
+
+  late Rx<File?> _pickImg;
+
+  bool _isImagePickerActive = false;
+
+  File? get pickImg => _pickImg.value;
+
+  final RxBool _showPassword = true.obs;
+
+  bool get showPassword => _showPassword.value;
+
+  Rx<User?> _user = FirebaseAuth.instance.currentUser.obs;
+
+  User get user => _user.value!;
+
   @override
   void dispose() {
     super.dispose();
@@ -46,42 +70,18 @@ class AuthController extends GetxController {
     }
   }
 
-  late Rx<User?> _user;
-
-  final GlobalKey<FormState> _key = GlobalKey<FormState>();
-
-  GlobalKey<FormState> get formKey => _key;
-
-  final GlobalKey<FormState> _signUpkey = GlobalKey<FormState>();
-
-  GlobalKey<FormState> get signUpKey => _signUpkey;
-
-  late Rx<File?> _pickImg;
-
-  bool _isImagePickerActive = false;
-
-  File? get pickImg => _pickImg.value;
-
-  final RxBool _showPassword = true.obs;
-
-  bool get showPassword => _showPassword.value;
-
-  // final Rx<User?> _user = FirebaseAuth.instance.currentUser.obs;
-
-  User get user => _user.value!;
+  @override
+  void onInit() {
+    super.onInit();
+    FirebaseAuth.instance.authStateChanges().listen((User? newUser) {
+      _user(newUser);
+    });
+    _pickImg = Rx<File?>(null);
+  }
 
   void toggleShowPassword() {
     _showPassword.toggle();
   }
-
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   FirebaseAuth.instance.authStateChanges().listen((User? newUser) {
-  //     _user(newUser);
-  //   });
-  //   _pickImg = Rx<File?>(null);
-  // }
 
   //User Persistant
   isUserLogin() {
@@ -192,13 +192,12 @@ class AuthController extends GetxController {
             .set(user.toMap())
             .then((value) {
           // Remove the loading dialog
-          Get.back();
 
           Get.snackbar(
             'Account Created',
             'Your account has been successfully created.',
           );
-
+          Get.back();
           clearControllers();
 
           // Show a success message

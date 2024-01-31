@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tiktok_clone/controllers/home_controller/home_controller.dart';
 import 'package:tiktok_clone/views/home_view.dart/video_player.dart';
-import 'package:tiktok_clone/views/profile_views/profile_view.dart';
 
 import 'video_details.dart';
 
